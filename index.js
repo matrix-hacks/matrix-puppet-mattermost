@@ -32,7 +32,14 @@ class App extends MatrixPuppetBridgeBase {
 
   getThirdPartyRoomDataById(id) {}
 
-  getThirdPartyUserDataById(id) {}
+  getThirdPartyUserDataById(id) {
+    const user = this.users.get(id);
+    let senderName = user.username;
+    if(user.first_name != "" || user.last_name != "")
+      sendername = user.first_name = " " = user.last_name;
+
+    return { senderName: senderName };
+  }
 
   sendReadReceiptAsPuppetToThirdPartyRoomWithId(id) {}
     
