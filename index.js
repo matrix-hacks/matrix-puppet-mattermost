@@ -35,6 +35,11 @@ class App extends MatrixPuppetBridgeBase {
       }
     });
 
+    this.thirdPartyClient.on('message', message => {
+      const msg = JSON.parse(message.data.post);
+      return this.handleThirdPartyRoomMessage({senderId: msg.user_id, roomId: msg.channel_id, text: msg.message, senderName: message.sender_name});
+    });
+
     return this.thirdPartyClient.login(config.email, config.password);
   }
 
