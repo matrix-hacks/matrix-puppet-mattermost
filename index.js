@@ -27,10 +27,36 @@ class App extends MatrixPuppetBridgeBase {
         this.users.set(data[i].id, data[i]);
     });
 
+    this.channels = new Map();
+    this.thirdPartyClient.on('channelsLoaded', data => {
+      for(let i=0; i<data.length; i++) {
+        this.channels.set(data[i].id, data[i]);
+        this.getOrCreateMatrixRoomFromThirdPartyRoomId(data[i].id);
+      }
+    });
+
     return this.thirdPartyClient.login(config.email, config.password);
   }
 
-  getThirdPartyRoomDataById(id) {}
+  getThirdPartyRoomDataById(id) {
+    const channel = this.channels.get(id);
+    const name = channel.display_name;
+    let topic = "Mattermost Direct Message";
+
+    switch(channel.type) {
+      case "D":
+        topic = "Mattermost Direct Message";
+        break;
+      case "O":
+        topic = "Mattermost Public Channel";
+        break;
+      case "P":
+        topic = "Mattermost Private Channel";
+        break;
+    }
+
+    return {name: name, topic: topic};
+  }
 
   getThirdPartyUserDataById(id) {
     const user = this.users.get(id);
