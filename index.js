@@ -80,7 +80,9 @@ class App extends MatrixPuppetBridgeBase {
 
   sendFileMessageAsPuppetToThirdPartyRoomWithId(id, data) {}
 
-  sendMessageAsPuppetToThirdPartyRoomWithId(id, text) {}
+  sendMessageAsPuppetToThirdPartyRoomWithId(id, text) {
+    this.thirdPartyClient.postMessage(text, id);
+  }
 
 }
 
