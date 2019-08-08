@@ -1,3 +1,4 @@
 node_modules
 *.yaml
 config.json
+*.db
