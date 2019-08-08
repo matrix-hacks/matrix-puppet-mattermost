@@ -8,6 +8,10 @@
   },
   "host": "your.mattermost.server",
   "group": "your-group",
+  "options": {
+    "wssPort": 443,
+    "httpPort": 80
+  },
   "email": "your@email.address",
   "password": "yourpassword",
   "mfaToken": "your-multifactor-auth-token"
