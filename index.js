@@ -5,6 +5,7 @@ const {
   Puppet,
   MatrixPuppetBridgeBase
 } = require("matrix-puppet-bridge");
+const Client = require('mattermost-client');
 const config = require('./config.json');
 const path = require('path');
 const puppet = new Puppet(path.join(__dirname, './config.json' ));
@@ -18,7 +19,15 @@ class App extends MatrixPuppetBridgeBase {
     return "Mattermost";
   }
   initThirdPartyClient() {
-    return;
+    this.thirdPartyClient = new Client(config.host, config.group, config.options);
+
+    this.users = new Map();
+    this.thirdPartyClient.on('profilesLoaded', data => {
+      for(let i=1; i<data.length; i++)
+        this.users.set(data[i].id, data[i]);
+    });
+
+    return this.thirdPartyClient.login(config.email, config.password);
   }
 
   getThirdPartyRoomDataById(id) {}
