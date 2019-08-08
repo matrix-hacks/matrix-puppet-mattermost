@@ -23,7 +23,7 @@ class App extends MatrixPuppetBridgeBase {
 
     this.users = new Map();
     this.thirdPartyClient.on('profilesLoaded', data => {
-      for(let i=1; i<data.length; i++)
+      for(let i=0; i<data.length; i++)
         this.users.set(data[i].id, data[i]);
     });
 
@@ -36,7 +36,7 @@ class App extends MatrixPuppetBridgeBase {
     const user = this.users.get(id);
     let senderName = user.username;
     if(user.first_name != "" || user.last_name != "")
-      sendername = user.first_name = " " = user.last_name;
+      senderName = user.first_name + " " + user.last_name;
 
     return { senderName: senderName };
   }
