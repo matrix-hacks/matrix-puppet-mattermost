@@ -1,0 +1,14 @@
+{
+  "registrationPath": "mattermost-registration.yaml",
+  "port": 8090,
+  "bridge": {
+    "homeserverUrl":"https://your.home.server",
+    "domain": "your.home.server",
+    "registration": "mattermost-registration.yaml"
+  },
+  "host": "your.mattermost.server",
+  "group": "your-group",
+  "email": "your@email.address",
+  "password": "yourpassword",
+  "mfaToken": "your-multifactor-auth-token"
+}
