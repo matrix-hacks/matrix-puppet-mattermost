@@ -54,7 +54,9 @@ class App extends MatrixPuppetBridgeBase {
 
   getThirdPartyRoomDataById(id) {
     const channel = this.channels.get(id);
-    const name = channel.display_name;
+    let name = "";
+    if(channel.display_name)
+      name = channel.display_name;
     let topic = "Mattermost Direct Message";
 
     switch(channel.type) {
