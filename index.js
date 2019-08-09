@@ -107,7 +107,7 @@ new Cli({
       reg.setId(AppServiceRegistration.generateToken());
       reg.setHomeserverToken(AppServiceRegistration.generateToken());
       reg.setAppServiceToken(AppServiceRegistration.generateToken());
-      reg.setSenderLocalpart("mattermost");
+      reg.setSenderLocalpart("mattermostbot");
       reg.addRegexPattern("users", "@mattermost_.*", true);
       reg.addRegexPattern("aliases", "#mattermost_.*", true);
       callback(reg);
