@@ -36,6 +36,11 @@ class App extends MatrixPuppetBridgeBase {
       }
     });
 
+    this.myId = '';
+    this.thirdPartyClient.on('meLoaded', data => {
+      this.myId = data.id;
+    });
+
     this.channels = new Map();
     this.thirdPartyClient.on('channelsLoaded', data => {
       for(let i=0; i<data.length; i++) {
@@ -46,6 +51,8 @@ class App extends MatrixPuppetBridgeBase {
 
     this.thirdPartyClient.on('message', message => {
       const msg = JSON.parse(message.data.post);
+      if(msg.user_id = this.myId) //we already have our own message
+        return;
       return this.handleThirdPartyRoomMessage({senderId: msg.user_id, roomId: msg.channel_id, text: msg.message, senderName: message.sender_name});
     });
 
