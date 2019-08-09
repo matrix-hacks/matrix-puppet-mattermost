@@ -23,8 +23,17 @@ class App extends MatrixPuppetBridgeBase {
 
     this.users = new Map();
     this.thirdPartyClient.on('profilesLoaded', data => {
-      for(let i=0; i<data.length; i++)
+      for(let i=0; i<data.length; i++) {
+        let user = data[i];
+        user.userId = user.id;
+        let senderName = user.username;
+        if(user.first_name != "" || user.last_name != "")
+          senderName = user.first_name + " " + user.last_name;
+        user.senderName = senderName;
+        user.name = senderName;
         this.users.set(data[i].id, data[i]);
+        this.joinThirdPartyUsersToStatusRoom([user]);
+      }
     });
 
     this.channels = new Map();
@@ -64,12 +73,7 @@ class App extends MatrixPuppetBridgeBase {
   }
 
   getThirdPartyUserDataById(id) {
-    const user = this.users.get(id);
-    let senderName = user.username;
-    if(user.first_name != "" || user.last_name != "")
-      senderName = user.first_name + " " + user.last_name;
-
-    return { senderName: senderName };
+    return this.users.get(id);;
   }
 
   sendReadReceiptAsPuppetToThirdPartyRoomWithId(id) {}
