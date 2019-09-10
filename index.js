@@ -65,7 +65,10 @@ class App extends MatrixPuppetBridgeBase {
       this.handleTypingEvent(user_id,channel_id);
     });
 
-    return this.thirdPartyClient.login(config.email, config.password);
+    if (config.hasOwnProperty('token'))
+      return this.thirdPartyClient.tokenLogin(config.token);
+    else
+      return this.thirdPartyClient.login(config.email, config.password);
   }
 
   async handleTypingEvent(user_id, channel_id) {

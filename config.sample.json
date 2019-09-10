@@ -14,5 +14,7 @@
   },
   "email": "your@email.address",
   "password": "yourpassword",
-  "mfaToken": "your-multifactor-auth-token"
+  "mfaToken": "your-multifactor-auth-token",
+
+  "token": "your mattermost personal access token, if this is set then email/password will not be used"
 }
