@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "matrix-puppet-bridge": "github:matrix-hacks/matrix-puppet-bridge#2fd0e44",
-    "mattermost-client": "loafoe/mattermost-client#9822ee5"
+    "mattermost-client": "nr23730/mattermost-client#5f2e11c"
   }
 }
