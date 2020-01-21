@@ -23,7 +23,7 @@ class App extends MatrixPuppetBridgeBase {
 
     this.users = new Map();
     this.thirdPartyClient.on('profilesLoaded', data => {
-console.log(data);
+    console.log(data);
       for(let i=0; i<data.length; i++) {
         let user = data[i];
         user.userId = user.id;
@@ -105,7 +105,9 @@ console.log(data);
   }
 
   getThirdPartyUserDataById(id) {
-    return this.users.get(id);;
+    if(!this.users.has(id))
+      this.thirdPartyClient.loadAllUsers();
+    return this.users.get(id);
   }
 
   sendReadReceiptAsPuppetToThirdPartyRoomWithId(id) {}
