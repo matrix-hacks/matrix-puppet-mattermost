@@ -76,7 +76,7 @@ class App extends MatrixPuppetBridgeBase {
       // client can get timeout value, but intent does not support this yet.
       await ghostIntent._ensureJoined(matrixRoomId);
       await ghostIntent._ensureHasPowerLevelFor(matrixRoomId, "m.typing");
-      return ghostIntent.client.sendTyping(matrixRoomId, status, 5000);
+      return ghostIntent.client.sendTyping(matrixRoomId, true, 5000);
     } catch (err) {
       debug('could not send typing event', err.message);
     }
