@@ -56,8 +56,8 @@ class App extends MatrixPuppetBridgeBase {
     this.thirdPartyClient.on('message', message => {
       const msg = JSON.parse(message.data.post);
       console.log(msg);
-      //      if(msg.user_id == this.myId) //we already have our own message
-      //        return;
+      if(msg.user_id == this.myId) //we already have our own message
+        return;
       if (msg.file_ids) {
         for (let i = 0; i < msg.file_ids.length; i++) {
           const options =  {
