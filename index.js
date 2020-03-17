@@ -3,13 +3,15 @@ const {
     Cli, AppServiceRegistration
   },
   Puppet,
-  MatrixPuppetBridgeBase
+  MatrixPuppetBridgeBase,
+  utils: { download }
 } = require("matrix-puppet-bridge");
 const Client = require('mattermost-client');
 const config = require('./config.json');
 const path = require('path');
 const puppet = new Puppet(path.join(__dirname, './config.json' ));
 const debug = require('debug')('matrix-puppet:mattermost');
+let fs = require('fs');
 
 class App extends MatrixPuppetBridgeBase {
   getServicePrefix() {
@@ -23,7 +25,6 @@ class App extends MatrixPuppetBridgeBase {
 
     this.users = new Map();
     this.thirdPartyClient.on('profilesLoaded', data => {
-    console.log(data);
       for(let i=0; i<data.length; i++) {
         let user = data[i];
         user.userId = user.id;
@@ -44,6 +45,7 @@ class App extends MatrixPuppetBridgeBase {
 
     this.channels = new Map();
     this.thirdPartyClient.on('channelsLoaded', data => {
+      console.log(data);
       for(let i=0; i<data.length; i++) {
         this.channels.set(data[i].id, data[i]);
         this.getOrCreateMatrixRoomFromThirdPartyRoomId(data[i].id);
@@ -79,7 +81,7 @@ class App extends MatrixPuppetBridgeBase {
       // client can get timeout value, but intent does not support this yet.
       await ghostIntent._ensureJoined(matrixRoomId);
       await ghostIntent._ensureHasPowerLevelFor(matrixRoomId, "m.typing");
-      return ghostIntent.client.sendTyping(matrixRoomId, status, 5000);
+      return ghostIntent.client.sendTyping(matrixRoomId, true, 5000);
     } catch (err) {
       debug('could not send typing event', err.message);
     }
@@ -88,7 +90,9 @@ class App extends MatrixPuppetBridgeBase {
   getThirdPartyRoomDataById(id) {
     const channel = this.channels.get(id);
     let name = "";
-    if(channel.display_name)
+    if(!channel)
+      this.thirdPartyClient.loadChannels();
+    if(channel)
       name = channel.display_name;
     let topic = "Mattermost Direct Message";
 
@@ -117,9 +121,22 @@ class App extends MatrixPuppetBridgeBase {
     
   sendTypingEventAsPuppetToThirdPartyRoomWithId(id, status) {}
 
-  sendImageMessageAsPuppetToThirdPartyRoomWithId(id, data) {}
+  sendImageMessageAsPuppetToThirdPartyRoomWithId(id, data) {
+    return this.sendFileMessageAsPuppetToThirdPartyRoomWithId(id, data);
+  }
 
-  sendFileMessageAsPuppetToThirdPartyRoomWithId(id, data) {}
+  sendFileMessageAsPuppetToThirdPartyRoomWithId(id, data) {
+    return download.getTempfile(data.url, { tagFilename: true }).then(({path}) => {
+      let file = fs.createReadStream(path);
+      const response = this.thirdPartyClient.uploadFile(id, file, (data) => {
+        let msg = {
+          message: "",
+          file_ids: [data.file_infos[0].id]
+        };
+        return this.thirdPartyClient.postMessage(msg, id);
+      });
+    });
+  }
 
   sendMessageAsPuppetToThirdPartyRoomWithId(id, text) {
     this.thirdPartyClient.postMessage(text, id);
