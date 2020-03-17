@@ -7,10 +7,13 @@ It's based on [mattermost-client](https://github.com/loafoe/mattermost-client), 
 ## Features
 
 - [x] login to your Mattermost account
-- [x] send text messages to channel you subscribed to
+- [x] send text messages to channel you subscribed to (group, public, direct)
 - [x] user sync
 - [x] channel sync
 - [x] receive text messages
+- [x] receive typing events
+- [x] send files
+- [x] receive files
 
 So the basic functionality should work but there is a lot of stuff like attachments, edits, quoting, events (user x joined, user y left) that may be added in the future.
 
