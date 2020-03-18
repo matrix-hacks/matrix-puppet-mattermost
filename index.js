@@ -34,8 +34,15 @@ class App extends MatrixPuppetBridgeBase {
           senderName = user.first_name + " " + user.last_name;
         user.senderName = senderName;
         user.name = senderName;
-        this.users.set(data[i].id, data[i]);
-        this.joinThirdPartyUsersToStatusRoom([user]);
+        const options =  {
+          url: 'https://' + this.thirdPartyClient.host + '/api/v4/users/' + user.id + '/image',
+          encoding: null
+        };
+        request(options, (error, response, body) => {
+          user.avatar = { buffer: new Buffer.from(body), type: response.headers['content-type'] };
+          this.users.set(data[i].id, user);
+          this.joinThirdPartyUsersToStatusRoom([user]);
+        }).auth(null, null, true, this.thirdPartyClient.token);
       }
     });
 
