@@ -13,6 +13,8 @@ const puppet = new Puppet(path.join(__dirname, './config.json'));
 const debug = require('debug')('matrix-puppet:mattermost');
 let fs = require('fs');
 const request = require('request');
+const emojis = require('./emojis.json');
+const pattern = ":[a-z0-9\+\-\_]*:";
 
 class App extends MatrixPuppetBridgeBase {
   getServicePrefix() {
@@ -60,11 +62,11 @@ class App extends MatrixPuppetBridgeBase {
       }
     });
 
-    this.thirdPartyClient.on('message', message => {
-      const msg = JSON.parse(message.data.post);
+    this.thirdPartyClient.on('message', data => {
+      const msg = JSON.parse(data.data.post);
       console.log(msg);
-      if(msg.user_id == this.myId) //we already have our own message
-        return;
+      // if(msg.user_id == this.myId) //we already have our own message
+      //   return;
       if (msg.file_ids) {
         for (let i = 0; i < msg.file_ids.length; i++) {
           const options =  {
@@ -78,7 +80,17 @@ class App extends MatrixPuppetBridgeBase {
       }
       if (msg.message === '')
         return;
-      return this.handleThirdPartyRoomMessage({ senderId: msg.user_id, roomId: msg.channel_id, text: msg.message, senderName: message.sender_name });
+      let message = msg.message;
+      while(message.match(pattern)) {
+        const matches = message.match(pattern)[0].replace(":","").replace(":","");
+          const emoji = emojis[matches];
+          message = message.replace(":"+matches+":", (matched) =>{
+            if(emoji)
+              return String.fromCodePoint(parseInt (emoji, 16));
+            return matches;
+          });
+      }
+      return this.handleThirdPartyRoomMessage({ senderId: msg.user_id, roomId: msg.channel_id, text: message, senderName: message.sender_name });
     });
 
     this.thirdPartyClient.on('typing', data => {
