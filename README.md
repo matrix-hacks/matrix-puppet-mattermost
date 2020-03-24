@@ -14,6 +14,7 @@ It's based on [mattermost-client](https://github.com/loafoe/mattermost-client), 
 - [x] receive typing events
 - [x] send files
 - [x] receive files
+- [x] support default emojis of mattermost (translating to unicode)
 
 So the basic functionality should work but there is a lot of stuff like attachments, edits, quoting, events (user x joined, user y left) that may be added in the future.
 
