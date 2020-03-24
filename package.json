@@ -7,7 +7,7 @@
     "start": "DEBUG=matrix-puppet:* node index.js"
   },
   "dependencies": {
-    "matrix-puppet-bridge": "github:matrix-hacks/matrix-puppet-bridge#2fd0e44",
+    "matrix-puppet-bridge": "github:matrix-hacks/matrix-puppet-bridge#186331f",
     "mattermost-client": "nr23730/mattermost-client#5f2e11c"
   }
 }
