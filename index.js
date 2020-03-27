@@ -15,6 +15,18 @@ let fs = require('fs');
 const request = require('request');
 const emojis = require('./emojis.json');
 const pattern = ":[a-z0-9\+\-\_]*:";
+const smileys = {
+  ":)": "\uD83D\uDE42",
+  ":D": "\uD83D\uDE04",
+  ";)": "\uD83D\uDE09",
+  ":(": "\uD83D\uDE41",
+  ":/": "\uD83D\uDE15",
+  ":p": "\uD83D\uDE1B",
+  ":P": "\uD83D\uDE1B",
+  ":'(": "\uD83D\uDE22",
+  "<3": "\u2764\uFE0F",
+  "</3": "\uD83D\uDC94"
+};
 
 class App extends MatrixPuppetBridgeBase {
   getServicePrefix() {
@@ -65,8 +77,8 @@ class App extends MatrixPuppetBridgeBase {
     this.thirdPartyClient.on('message', data => {
       const msg = JSON.parse(data.data.post);
       console.log(msg);
-      if(msg.user_id == this.myId) //we already have our own message
-        return;
+      // if(msg.user_id == this.myId) //we already have our own message
+      //   return;
       if (msg.file_ids) {
         for (let i = 0; i < msg.file_ids.length; i++) {
           const options =  {
@@ -89,6 +101,10 @@ class App extends MatrixPuppetBridgeBase {
               return String.fromCodePoint(parseInt (emoji, 16));
             return matches;
           });
+      }
+      for (const i in smileys) {
+        const regex = new RegExp(i.replace(/([()[{*+.$^\\|?])/g, '\\$1'), 'gim');
+        message = message.replace(regex, smileys[i]);
       }
       return this.handleThirdPartyRoomMessage({ senderId: msg.user_id, roomId: msg.channel_id, text: message, senderName: message.sender_name });
     });
