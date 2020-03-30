@@ -25,7 +25,8 @@ const smileys = {
   ":P": "\uD83D\uDE1B",
   ":'(": "\uD83D\uDE22",
   "<3": "\u2764\uFE0F",
-  "</3": "\uD83D\uDC94"
+  "</3": "\uD83D\uDC94",
+  "\uD83D\uDE15/": "://",
 };
 
 class App extends MatrixPuppetBridgeBase {
@@ -90,8 +91,6 @@ class App extends MatrixPuppetBridgeBase {
           }).auth(null, null, true, this.thirdPartyClient.token);
         }
       }
-      if (msg.message === '')
-        return;
       let message = msg.message;
       while(message.match(pattern)) {
         const matches = message.match(pattern)[0].replace(":","").replace(":","");
